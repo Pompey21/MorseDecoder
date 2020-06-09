@@ -1,37 +1,45 @@
-file = open("morse_samples_naloga2.txt", 'r')
-word = []
+# -------------------------------------------------------
+# 						---------
+# 						| SETUP |
+#						---------
+# -------------------------------------------------------
+
+# creating cache that will save characters read from the text file
+cache = []
+
+# creating memory that stores decoded message from cache
 memory = []
+
+# opens and reads the text file and already separates characters into separate entities
+file = open("morse_samples_naloga2.txt", 'r') 
 counter = 0
+while 1: 
+    # read by character 
+    char = file.read(1)
+    cache.append(char) 
 
-while 1:
-	char = file.read(1)
-	word.append(char)
+    if cache[-1] == '-':
+    	counter += 1
+    	if counter >= 25:
+    		memory.append(cache)
+    		cache = []
+    		counter = 0
+    elif cache[-1] == '#':
+    	counter = 0
 
-	if char == '-':
-		counter += 1
-		if counter == 60:
-			memory.append(word)
-			word = []
-	elif char == '#':
-		counter = 0
+    elif not char:  
+        break 
+file.close() 
 
-	elif not char:
-		break
-
-# print(len(memory))
-
-
-# turning lists (encoded words) to strings (still encoded words)
+# turning lists (encoded letters) to strings (still encoded letters)
 memoryStrs = []
 for elem in memory:
 	strs = ""
 	for char in elem:
 		strs += char
 	memoryStrs.append(strs)
+#print(memoryStrs)
 
-
-# *******************************************************
-# *******************************************************
 # -------------------------------------------------------
 # 						-----------
 # 						| METHODS |
@@ -75,46 +83,10 @@ def backCut(memory):
 	return memoryCut
 
 
-def spaceCut(memory):
-	# cut the spaces
-	frontCut = frontCut2(memory)
-	allCut = backCut(frontCut)
-	# form strings from lists
-	final = []
-	for elem in allCut:
-		list2str = ""
-		for char in elem:
-			list2str += char
-		final.append(list2str)
-	return final
-
-
-# final = spaceCut(memoryStrs)
-# # print('\n')
-# print(final)
-# print('\n')
-
-
-# -------------------------------------------------------
-# 						-----------
-# 	| RECURSIVELY CALLED ON THE WHOLE LIST OF WORDS |
-#						-----------
-# -------------------------------------------------------
-
-# RECURSIVELY CALLED ON THE WHOLE LIST OF WORDS
-# method 'divideWord' divides the word into separate letters
 # method 'dotOrLine2' splits the letter into separate entities of dots and 
 # lines defined in terms of the length os strings of '#'. method 'toMorse'
 # then translates those entities into 'dot' or 'line' so that is easier
 # for further decoding.
-
-def divideWord(word):
-	letters = word.split('-------------------------')
-	letters = spaceCut(letters)
-	return letters
-
-# letters = divideWord(final[0])
-# print(letters)
 
 def dotOrLine2(msg):
 	memory = msg.split('-')
@@ -130,18 +102,30 @@ def toMorse(msg):
 			morse.append('line')
 	return morse
 
+def spaceCut(memory):
+	# cut the spaces
+	frontCut = frontCut2(memory)
+	allCut = backCut(frontCut)
+	# form strings from lists
+	final = []
+	for elem in allCut:
+		list2str = ""
+		for char in elem:
+			list2str += char
+		final.append(list2str)
+	return final
+
 def toMorseALL(msg):
 	cropped = []
 	for letter in msg:
 		cropped.append(toMorse(dotOrLine2(letter)))
 	return cropped
 
-# cropped = toMorseALL(letters)
-# print(cropped)
-# print('\n')
-
-# method 'morseToLatin' decodes the word from the list of 'dot' and 'line'
-# to latin by using the dictionary 'morseDict' defined above.
+def controller(memory):
+	final = spaceCut(memory)
+	morse = toMorseALL(final)
+	return morse
+ 
 morseDict = {
 	tuple(['dot', 'line']) : 'A',
 	tuple(['line', 'dot', 'dot', 'dot']) : 'B',
@@ -182,57 +166,31 @@ morseDict = {
 	tuple([]) : ''
 }
 
+# method 'morseToLatin' decodes the message from the list of 'dot' and 'line'
+# to latin by using the dictionary 'morseDict' defined above.
 def morseToLatin(morse):
 	message = ""
 	for char in morse:
 		message += (morseDict[tuple(char)])
 	return message
 
-# message = morseToLatin(cropped)
-# print(message)
-
-
-def wordController(word):
-	letters = divideWord(word)
-	cropped = toMorseALL(letters)
-	message = morseToLatin(cropped)
-	return message
-
-# message = wordController(final[0])
-#print(message)
-
-# RECURSIVE CALL ON ALL WORDS OBTAINED 
-def recursiveCall(words):
-	sentance = []
-	for word in words:
-		sentance.append(wordController(word))
-	sentance = ' '.join(sentance)
-	return sentance
-
-# sentance = recursiveCall(final)
-# print(sentance)
 
 
 # -------------------------------------------------------
-# 						-----------
-# 				 	  | CONTROLLER |
-#						-----------
+# 						---------
+# 						| CALLS |
+#						---------
 # -------------------------------------------------------
-
-def controller(memory):
-	final = spaceCut(memoryStrs)
-	sentance = recursiveCall(final)
-	return sentance
-
-sentance = controller(memory)
-print(sentance)
+morse = controller(memory)
+print(morse)
+message = morseToLatin(morse)
+print('\n')
+print(message)
 
 
 
+#---------------------------------------------------------------------
 
 
-
-
-
-
+print('\n')
 
