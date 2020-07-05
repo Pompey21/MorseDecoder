@@ -1,4 +1,4 @@
-file = open("morse_samples_naloga2.txt", 'r')
+file = open("sporocilo.txt", 'r')
 word = []
 memory = []
 counter = 0
@@ -179,6 +179,15 @@ morseDict = {
 	tuple(['line', 'line', 'line', 'dot', 'dot']) : '8',
 	tuple(['line', 'line', 'line', 'line', 'dot']) : '9',
 	tuple(['line', 'line', 'line', 'line', 'line']) : '0',
+	tuple(['dot', 'line', 'dot', 'line', 'dot', 'line']) : '.',
+	tuple(['line', 'line', 'dot', 'dot', 'line', 'line']) : ',',
+	tuple(['dot', 'dot', 'line', 'line', 'dot', 'dot']) : '?',
+	tuple(['dot', 'dot', 'line', 'line', 'dot']) : '!',
+	tuple(['line', 'line', 'line', 'dot', 'dot', 'dot']) : ':',
+	tuple(['dot', 'line', 'dot', 'dot', 'line', 'dot']) : '"',
+	tuple(['line', 'dot', 'dot', 'dot', 'line']) : '=',
+	tuple(['line', 'dot', 'line', 'line', 'dot']) : '(',
+	tuple(['line', 'dot', 'line', 'line' , 'dot', 'line']) : ')',
 	tuple([]) : ''
 }
 
